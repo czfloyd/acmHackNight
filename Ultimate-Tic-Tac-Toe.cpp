@@ -1,21 +1,27 @@
-#include<iostream>
+#include <iostream>
 
 using namespace std;
 
+const int sizes = 3;
 
-void printBoard (int board[6][7]);
-void takeTurn (int board[6][7], int player);
-void initArray(int board[6][7]);
-bool checkWin(int board[6][7], int player);
-int main() {
-    int board[6][7];
-    bool gameOver = false;
-    initArray(board);
+void printBoard(int board[sizes][sizes][sizes][sizes]);
+int takeTurn(int board[sizes][sizes][sizes][sizes], int turn, int prevBoard);
+void initArray(int board[sizes][sizes][sizes][sizes]);
+bool checkWin(int board[sizes][sizes], int player);
+bool checkOverallWin(int board[sizes][sizes][sizes][sizes], int player);
+void  printTest(int board[sizes][sizes][sizes][sizes]);
+void  printTest();
+
+int main(){
+    int board[sizes][sizes][sizes][sizes];
     int turn = 1;
+    int prevBoard = -1;
+    initArray(board);
+    bool gameOver = false;
     
-    while(!gameOver){
-        takeTurn(board, turn);
-        gameOver = checkWin(board, turn);
+    while (!gameOver){
+        prevBoard = takeTurn(board, turn, prevBoard);
+        gameOver = checkOverallWin(board, turn);
         turn = 3 - turn;
     }
     
@@ -25,114 +31,192 @@ int main() {
     cout << "Player " << turn << " has won. This player is clearly the superior programmer.\n" << endl;
     return(0);
 }
-
-void printBoard (int board[6][7]) {
-    cout<< "  1";
-    for(int x = 2; x <= 7; x++) {
-        cout << "   " << x;
+bool checkWin(int board[sizes][sizes], int player)
+{
+    bool win = false;
+    if(board[0][0] == player && board[1][1] == player && board[2][2] == player)
+    {
+        win = true;
     }
-    cout << endl;
-    
-    
-    for(int r = 0; r < 6; r++) {
-        cout << "| ";
-        for(int c = 0; c < 7; c++) {
-            switch (board[r][c]) {
-                case 0:
-                    cout << "_ | ";
-                    break;
-                case 1:
-                    cout << "O | ";
-                    break;
-                case 2:
-                    cout << "X | ";
-                    break;
+    else if (board[0][0] == player && board[0][1] ==player && board[0][2] == player)
+    {
+        win = true;
+    }
+    else if (board[1][0] == player && board[1][1] ==player && board[1][2] ==player)
+    {
+        win = true;
+    }
+    else if (board[2][0] == player && board[2][1] == player && board[2][2] ==player)   
+    {
+        win = true;
+    }
+    else if(board[0][0] == player && board[1][0] == player && board[2][0] ==player)
+    {
+       win =true;
+    }
+    else if(board[0][1] == player && board[1][1] == player && board[2][1] ==player)
+    {
+       win =true;
+    }
+    else if(board[0][2] == player && board[1][2] == player && board[2][2] ==player)
+    {
+       win =true;
+    }
+    else if(board[0][2] == player && board[1][1] == player && board[2][0] ==player)
+    {
+        win = true;
+    }
+    return(win);
+}
+bool checkOverallWin(int board[sizes][sizes][sizes][sizes], int player)
+{
+     bool win = false;
+    if(checkWin(board[0][0],player) == true && checkWin(board[1][1],player) == true && checkWin(board[2][2],player) == true)
+    {
+        win = true;
+    }
+    else if (checkWin(board[0][0],player) == true && checkWin(board[0][1],player) == true && checkWin(board[0][2],player) == true)
+    {
+        win = true;
+    }
+    else if (checkWin(board[1][0],player) == true && checkWin(board[1][1],player) == true && checkWin(board[1][2],player) == true)
+    {
+        win = true;
+    }
+    else if (checkWin(board[2][0],player) == true && checkWin(board[2][1],player) == true && checkWin(board[2][2],player) == true)   
+    {
+        win = true;
+    }
+    else if(checkWin(board[0][0],player) == true && checkWin(board[1][0],player) == true && checkWin(board[2][0],player) == true)
+    {
+       win =true;
+    }
+    else if(checkWin(board[0][1],player) == true && checkWin(board[1][1],player)== true && checkWin(board[2][1],player) ==true)
+    {
+       win =true;
+    }
+    else if(checkWin(board[0][2],player) == true && checkWin(board[1][2],player)== true && checkWin(board[2][2], player)==true)
+    {
+       win =true;
+    }
+    else if(checkWin(board[0][2],player) == true && checkWin(board[1][1],player) == true && checkWin(board[2][0],player) == true)
+    {
+        win = true;
+    }
+    return(win);
+}
+void initArray(int board[sizes][sizes][sizes][sizes]){
+    for (int i = 0; i < sizes; i++){
+        for (int j = 0; j < sizes; j++){
+            for (int k = 0; k < sizes; k++){
+                for (int l = 0; l < sizes; l++){
+                    board[i][j][k][l] = 0;
                 }
+            }
+        }
+    }
+}
+
+void printBoard(int board[sizes][sizes][sizes][sizes])
+{
+  for (int i = 0; i < sizes; i++)
+    {
+        for (int j = 0; j < sizes; j++)
+        {
+            for (int k = 0; k < sizes; k++)
+            {
+                cout << "| ";
+                for (int l = 0; l < sizes; l++)
+                {
+                    switch (board[i][k][j][l]) {
+                    case 0:
+                        cout << "_ | ";
+                        break;
+                    case 1:
+                        cout << "O | ";
+                        break;
+                    case 2:
+                        cout << "X | ";
+                        break;
+                    }
+                }
+                cout << "    ";
+            }
+            cout << endl << endl;
         }
         cout << endl << endl;
     }
-    
-}
 
-void takeTurn (int board[6][7], int player) {
-    int col = 0;
-    int row = 6;
-    bool placed = false;
+}
+void printTest()
+{
+    for(int i = 0; i < 3; i++)
+    {
+        cout << "| ";
+        for(int x = 1; x <= 3; x++)
+        {
+            cout <<i*3+x<<" | ";
+        }
+        cout << endl << endl;
+    }
+}
+void printTest(int board[sizes][sizes])
+{
+    for(int i = 0; i < 3; i++)
+    {
+        cout << "| ";
+        for(int x = 1; x <= 3; x++)
+        {
+            if(board[i][x-1] == 0)
+                cout <<i*3+x<<" | ";
+            else 
+                cout << "_ | ";
+        }
+        cout << endl << endl;
+    }
+}
+int takeTurn(int board[sizes][sizes][sizes][sizes], int turn, int prevBoard){
     cout << "Here is the current board:\n";
     printBoard(board);
-    cout << "Player " << player << ", please select which column you are placing your piece in:\n";
-    cin >> col;
-    col--;
-    while (!placed) {
-        if (row < 0 || (col < 0 || col > 7)) {
-            row = 6;
-            cout << "Invalid move. Please try another column:\n";
-            cin >> col;
-            col--;
+    int temp = 0;
+    int pc = (prevBoard - 1) % 3;
+    int pr = (prevBoard - 1) / 3;
+    int cr = 0;
+    int cc = 0;
+    int input = 0;
+    bool validMove = false;
+    
+    if (checkWin(board[pr][pc], 1) || checkWin(board[pr][pc], 2) || prevBoard == -1){
+        while(!validMove){
+            cout << "Player " << turn << ", you have free reign. Here are your choices for boards:\n";
+            printTest();
+            cout << "Please choose a board to play in:\n";
+            cin >> prevBoard;
+            pc = (prevBoard - 1) % 3;
+            pr = (prevBoard - 1) / 3;
+            if((checkWin(board[pr][pc], 1) || checkWin(board[pr][pc], 2))){
+                cout << "Invalid move. Please try again.\n";
+            }
+            else validMove = true;
         }
-        else if (board[row][col] == 0) {
-            board[row][col] = player;
-            placed = true;
+    }
+    validMove = false;
+    while(!validMove){
+        cout << "Player " << turn << ", you are in board " << prevBoard << ". Here is the board of moves you can make:\n";
+        printTest(board[pr][pc]);
+        cout << "Please choose a space to play in:\n";
+        cin >> input;
+        cr = (input - 1) / 3;
+        cc = (input - 1) % 3;
+        if (board[pr][pc][cr][cc] != 0){
+            cout << "Invalid move. Please try again.\n";
         }
         else {
-            row--;
+            validMove = true;
         }
     }
+    board[pr][pc][cr][cc] = turn;
+    //cout << board[pr][pc][cr][cc] << " should be printed in " << pr << " " << pc << " " << cr << " " << cc << ".\n";
+    
+    return(input);
 }
-void initArray(int board[6][7]) {
-    for(int r = 0; r < 6; r ++) {
-        for(int c = 0; c < 7 ; c++) {
-            board[r][c] = 0;
-        }
-    }
-}
-
-bool checkWin(int board[6][7], int player){
-    bool won = false;
-    
-    
-    //Straight Down and NegDiagonal
-    for(int row = 0; row < 3; row++)
-    {
-        for(int col = 0; col < 7; col++)
-        {
-             if( ((board[row][col] == player) &&
-                  (board[row+1][col] == player) &&
-                  (board[row+2][col] == player) &&
-                  (board[row+3][col] == player)) )
-                  return (true);
-             if(col <= 3)
-             {
-                 if( (board[row][col] == player) &&
-                      (board[row+1][col+1] == player) &&
-                      (board[row+2][col+2] == player) &&
-                      (board[row+3][col+3] == player))
-                      return (true);
-             }
-             if(col >= 3)
-             {
-                 if( (board[row][col] == player) &&
-                      (board[row+1][col-1] == player) &&
-                      (board[row+2][col-2] == player) &&
-                      (board[row+3][col-3] == player))
-                      return (true);
-             }
-        }
-    }
-    
-    
-    for (int row = 0; row < 6; row++){
-        for (int col = 0; col <= 3; col++){
-            if (board[row][col] == player &&
-                board[row][col+1] == player &&
-                board[row][col+2] == player &&
-                board[row][col+3] == player)
-                return (true);
-        }
-    }
-    
-    return (won);
-}
-    
-
-
